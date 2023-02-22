@@ -1,6 +1,4 @@
-FROM ubuntu:20.04 AS builder
-
-LABEL maintainer="AnatoleLucet"
+FROM ubuntu:20.04
 
 ARG BUILD_APT_DEPS="ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip git binutils"
 ARG DEBIAN_FRONTEND=noninteractive
@@ -16,7 +14,6 @@ RUN apt update && apt upgrade -y && \
   make CMAKE_INSTALL_PREFIX=/usr/local install && \
   strip /usr/local/bin/nvim
 
-FROM ubuntu:20.04
-COPY --from=builder /usr/local /usr/local/
+COPY ./config /usr/local/.config
 
-CMD ["/usr/local/bin/nvim"]
+CMD ["/usr/local/bin/nvim", "-u", "/usr/local/.config/nvim/init.lua"]
