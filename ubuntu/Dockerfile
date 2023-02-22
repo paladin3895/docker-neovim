@@ -21,7 +21,7 @@ RUN apt update && apt upgrade -y && \
   apt install -y ${BUILD_APT_UTILS}
 
 # Install nvim
-RUN wget "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb"
+RUN wget --no-check-certificate "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb"
 RUN dpkg -i ./nvim-linux64.deb
 
 ENV NODE_VERSION=18.14.2
