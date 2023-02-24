@@ -16,9 +16,12 @@ ARG TARGET=v0.8.3
 #   make CMAKE_INSTALL_PREFIX=/usr/local install && \
 #   strip /usr/local/bin/nvim
 
-ARG BUILD_APT_UTILS="make wget curl git fzf"
+ARG BUILD_APT_UTILS="cmake g++ wget curl git fzf ripgrep ca-certificates"
 RUN apt update && apt upgrade -y && \
   apt install -y ${BUILD_APT_UTILS}
+
+RUN echo "export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt" >> /root/.bashrc
+RUN echo "cacert=/etc/ssl/certs/ca-certificates.crt" >> /root/.curlrc
 
 # Install nvim
 RUN wget --no-check-certificate "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.deb"
@@ -34,6 +37,8 @@ RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
 ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 RUN node --version
 RUN npm --version
+
+RUN nvim --headless -c "PackerSync" -c "quitall"
 
 COPY ./config /root/.config
 

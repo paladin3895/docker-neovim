@@ -1,3 +1,4 @@
+
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 local is_bootstrap = false
@@ -82,7 +83,11 @@ require('packer').startup(function(use)
   use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
 
   -- Fuzzy Finder (files, lsp, etc)
-  use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim', 'BurntSushi/ripgrep' } }
+  use { 'nvim-telescope/telescope.nvim', branch = '0.1.x' }
+
+  use 'nvim-lua/plenary.nvim'
+  
+  use 'BurntSushi/ripgrep'
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
@@ -243,16 +248,17 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer]' })
 
-vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>fc', require('telescope.builtin').commands, { desc = '[S]earch [C]ommands' })
-vim.keymap.set('n', '<leader>fs', require('telescope.builtin').lsp_document_symbols, { desc = '[S]earch Document [S]ymbols' })
+vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = '[F]ind existing [B]uffers' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
+vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = 'Live [G]rep' })
+vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
+vim.keymap.set('n', '<leader>fc', require('telescope.builtin').commands, { desc = '[F]ind [C]ommands' })
+vim.keymap.set('n', '<leader>fs', require('telescope.builtin').lsp_document_symbols, { desc = '[F]ind Document [S]ymbols' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = '[S]earch by [G]it [F]iles' })
-vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_commits, { desc = '[S]earch by [G]it [C]ommits' })
+vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search by [G]it [F]iles' })
+vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_commits, { desc = 'Search by [G]it [C]ommits' })
 
 -- [[ Configure nvim-tree ]]
 -- disable netrw at the very start of your init.lua (strongly advised)
@@ -288,7 +294,7 @@ vim.opt.termguicolors = true
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'php', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'php', 'lua', 'python', 'typescript', 'help', 'vim' },
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -505,10 +511,10 @@ cmp.setup {
 
 vim.keymap.set('n', '<leader><space>', ':noh<CR>')
 
-vim.keymap.set('n', '<leader>j', '<C-w>j')
-vim.keymap.set('n', '<leader>k', '<C-w>k')
-vim.keymap.set('n', '<leader>l', '<C-w>l')
-vim.keymap.set('n', '<leader>h', '<C-w>h')
+vim.keymap.set('n', '<c-j>', '<C-w>j')
+vim.keymap.set('n', '<c-k>', '<C-w>k')
+vim.keymap.set('n', '<c-l>', '<C-w>l')
+vim.keymap.set('n', '<c-h>', '<C-w>h')
 
 vim.keymap.set('n', '<F2>', vim.cmd.NERDTreeFind)
 vim.keymap.set('n', '<F3>', vim.cmd.NERDTreeToggle)
