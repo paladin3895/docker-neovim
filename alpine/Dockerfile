@@ -1,27 +1,16 @@
-FROM alpine:3.13 AS builder
+FROM alpine:edge
 
-LABEL maintainer="AnatoleLucet"
+LABEL maintainer="Dat Pham"
 
-ARG BUILD_DEPS="autoconf automake cmake curl g++ gettext gettext-dev git libtool make ninja openssl pkgconfig unzip binutils"
+ARG BUILD_DEPS="bash git lua nodejs npm lazygit bottom python3 go neovim ripgrep alpine-sdk"
 ARG TARGET=stable
 
-RUN apk add --no-cache ${BUILD_DEPS} && \
-  git clone https://github.com/neovim/neovim.git /tmp/neovim && \
-  cd /tmp/neovim && \
-  git fetch --all --tags -f && \
-  git checkout ${TARGET} && \
-  make CMAKE_BUILD_TYPE=Release && \
-  make CMAKE_INSTALL_PREFIX=/usr/local install && \
-  strip /usr/local/bin/nvim
+COPY ./config/nvim/user.lua ~/.config/nvim/lua/user/init.lua
 
-FROM alpine:3.13
-COPY --from=builder /usr/local /usr/local/
-RUN true # see: https://github.com/moby/moby/issues/37965
-# Required shared libraries
-COPY --from=builder /lib/ld-musl-x86_64.so.1 /lib/
-RUN true
-COPY --from=builder /usr/lib/libgcc_s.so.1 /usr/lib/
-RUN true
-COPY --from=builder /usr/lib/libintl.so.8 /usr/lib/
+RUN apk add --no-cache ${BUILD_DEPS} --update && \
+  git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim && \
+  # Uncomment the line below and replace the link with your user config repo to load a user config
+  # git clone https://github.com/username/AstroNvim_user ~/.config/nvim/lua/user
+  nvim --headless -c "autocmd User PackerComplete quitall"
 
-CMD ["/usr/local/bin/nvim"]
+CMD ["/usr/bin/nvim"]
